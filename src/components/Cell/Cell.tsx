@@ -1,14 +1,24 @@
-import { MINE_VALUE } from "../../lib/constants";
+import { CellState, MINE_VALUE } from "../../lib/constants";
 import * as S from "./Cell.styled";
 
 interface Props {
   value: number;
+  status: CellState;
+  handleClick: () => void;
 }
 
-function Cell({ value }: Props) {
+function Cell({ value, status, handleClick }: Props) {
+  const icon = value === MINE_VALUE ? "💣" : value > 0 ? value : "";
+
   return (
     <S.Container>
-      <S.Button>{value === MINE_VALUE ? "💣" : 0 < value ? value : ""}</S.Button>
+      <S.Button
+        $isOpen={status !== CellState.CLOSED}
+        $isBursted={status === CellState.BURSTED}
+        onClick={handleClick}
+      >
+        {status !== CellState.CLOSED && icon}
+      </S.Button>
     </S.Container>
   );
 }
