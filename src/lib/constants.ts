@@ -1,1 +1,9 @@
-export const MINE_VALUE = -100;
+export const MINE_VALUE = -1;
+
+export enum CellState {
+  CLOSED,
+  OPENED,
+  FLAGGED,
+  FLAGGED_MINE,
+  BURSTED,
+}

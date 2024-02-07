@@ -1,32 +1,35 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import { createBoard } from "../../lib/minesweeper";
+import { createBoard, openCell } from "../../lib/minesweeper";
+import { CellState } from "../../lib/constants";
 
 export interface MineSweeperState {
+  status: "IDLE" | "IN_PROGRESS" | "WIN" | "DEFEAT";
   board: number[][];
-  state: "IDLE" | "IN_PROGRESS" | "WIN" | "DEFEAT";
+  cellStatus: CellState[][];
   time: number;
-  width: number;
-  height: number;
+  row: number;
+  column: number;
   mines: number;
   flags: number;
   openedCells: number;
 }
 
 const initialState: MineSweeperState = {
-  state: "IDLE",
-  time: 0,
-  width: 16,
-  height: 16,
+  status: "IDLE",
   board: Array.from(Array(16), () => new Array(16).fill(0)),
+  cellStatus: Array.from(Array(16), () => new Array(16).fill(CellState.CLOSED)),
+  time: 0,
+  row: 16,
+  column: 16,
   mines: 40,
   flags: 0,
   openedCells: 0,
 };
 
 interface DifficultyPayload {
-  width: number;
-  height: number;
+  row: number;
+  column: number;
   mines: number;
 }
 
@@ -34,34 +37,67 @@ export const mineSweeperSlice = createSlice({
   name: "mineSweeper",
   initialState,
   reducers: {
-    setDifficulty: (state, action: PayloadAction<DifficultyPayload>) => {
-      const { width, height, mines } = action.payload;
+    resetGame: (state, action: PayloadAction<DifficultyPayload>) => {
+      const { row, column, mines } = action.payload;
 
-      state.board = Array.from(Array(height), () => new Array(width).fill(0));
-      state.width = width;
-      state.height = height;
+      state.status = "IDLE";
+      state.board = Array.from(Array(row), () => new Array(column).fill(0));
+      state.cellStatus = Array.from(Array(row), () => new Array(column).fill(CellState.CLOSED));
+      state.time = 0;
+      state.row = row;
+      state.column = column;
       state.mines = mines;
+      state.flags = 0;
+      state.openedCells = 0;
     },
     startGame: (state, action: PayloadAction<[number, number]>) => {
+      if (state.status !== "IDLE") return;
+
       const [startX, startY] = action.payload;
 
       state.board = createBoard({
-        width: state.width,
-        height: state.height,
+        row: state.row,
+        column: state.column,
         mines: state.mines,
         startCoords: [startX, startY],
       });
-      state.state = "IN_PROGRESS";
+
+      state.status = "IN_PROGRESS";
       state.time = 0;
-      state.openedCells = 0;
+    },
+    clickCell: (state, action: PayloadAction<[number, number]>) => {
+      const [x, y] = action.payload;
+
+      if (state.status === "DEFEAT" || state.status === "WIN") return;
+      if (state.cellStatus[x][y] !== CellState.CLOSED) return;
+
+      const { updatedCellStatus, openCount } = openCell({
+        x: x,
+        y: y,
+        board: state.board,
+        cellStatus: state.cellStatus,
+      });
+
+      state.cellStatus = updatedCellStatus;
+      state.openedCells += openCount;
+
+      if (openCount < 1) {
+        state.status = "DEFEAT";
+      }
+
+      if (state.openedCells === state.row * state.column - state.mines) {
+        state.status = "WIN";
+      }
     },
   },
 });
 
-export const { setDifficulty, startGame } = mineSweeperSlice.actions;
+export const { resetGame, startGame, clickCell } = mineSweeperSlice.actions;
 
 export const selectBoard = (state: RootState) => state.mineSweeper.board;
-export const selectBoardWidth = (state: RootState) => state.mineSweeper.width;
-export const selectBoardHeight = (state: RootState) => state.mineSweeper.height;
+export const selectBoardRow = (state: RootState) => state.mineSweeper.row;
+export const selectBoardColumn = (state: RootState) => state.mineSweeper.column;
+export const selectCellStatus = (state: RootState) => state.mineSweeper.cellStatus;
+export const selectGameStatus = (state: RootState) => state.mineSweeper.status;
 
 export default mineSweeperSlice.reducer;
