@@ -7,6 +7,10 @@ const GlobalStyle = createGlobalStyle`
   :root {
     font-family: 'sans-serif';
   }
+
+  body {
+    background-color: ghostwhite;
+  }
 `;
 
 export default GlobalStyle;

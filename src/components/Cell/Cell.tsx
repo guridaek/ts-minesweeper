@@ -1,9 +1,14 @@
+import { MINE_VALUE } from "../../lib/constants";
 import * as S from "./Cell.styled";
 
-function Cell() {
+interface Props {
+  value: number;
+}
+
+function Cell({ value }: Props) {
   return (
     <S.Container>
-      <S.Button />
+      <S.Button>{value === MINE_VALUE ? "💣" : 0 < value ? value : ""}</S.Button>
     </S.Container>
   );
 }
