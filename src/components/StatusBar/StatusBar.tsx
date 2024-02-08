@@ -8,10 +8,6 @@ import {
 } from "../../redux/slice/minesweeperSlice";
 import * as S from "./StatusBar.styled";
 
-const ROW = 16;
-const COLUMN = 16;
-const MINES = 20;
-
 function StatusBar() {
   const status = useAppSelector(selectGameStatus);
   const timer = useAppSelector(selectTimer);
@@ -25,7 +21,7 @@ function StatusBar() {
   );
 
   const handleResetButtonClick = () => {
-    dispatch(resetGame({ row: ROW, column: COLUMN, mines: MINES }));
+    dispatch(resetGame());
   };
 
   return (

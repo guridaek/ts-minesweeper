@@ -37,7 +37,7 @@ export const mineSweeperSlice = createSlice({
   name: "mineSweeper",
   initialState,
   reducers: {
-    resetGame: (state, action: PayloadAction<DifficultyPayload>) => {
+    changeDifficulty: (state, action: PayloadAction<DifficultyPayload>) => {
       const { row, column, mines } = action.payload;
 
       state.status = "IDLE";
@@ -47,6 +47,14 @@ export const mineSweeperSlice = createSlice({
       state.row = row;
       state.column = column;
       state.mines = mines;
+      state.flags = 0;
+      state.openedCells = 0;
+    },
+    resetGame: (state) => {
+      state.status = "IDLE";
+      state.board = state.board.map((row) => row.map(() => 0));
+      state.cellStatus = state.cellStatus.map((row) => row.map(() => CellState.CLOSED));
+      state.timer = 0;
       state.flags = 0;
       state.openedCells = 0;
     },
@@ -95,7 +103,8 @@ export const mineSweeperSlice = createSlice({
   },
 });
 
-export const { resetGame, startGame, clickCell, tickTimer } = mineSweeperSlice.actions;
+export const { changeDifficulty, resetGame, startGame, clickCell, tickTimer } =
+  mineSweeperSlice.actions;
 
 export const selectBoard = (state: RootState) => state.mineSweeper.board;
 export const selectBoardRow = (state: RootState) => state.mineSweeper.row;
