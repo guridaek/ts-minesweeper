@@ -33,7 +33,7 @@ export const ResetButton = styled.button`
 export const Counter = styled.ul`
   display: flex;
 
-  width: 60px;
+  width: 58px;
   height: 30px;
 
   box-sizing: border-box;
