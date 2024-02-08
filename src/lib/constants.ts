@@ -16,3 +16,6 @@ export const DIFFICULTY_SETTINGS = {
   [DIFFICULTIES[1]]: { row: 16, column: 16, mines: 40 },
   [DIFFICULTIES[2]]: { row: 16, column: 32, mines: 100 },
 };
+
+export const MIN_SIZE = 8;
+export const MAX_SIZE = 100;

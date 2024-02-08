@@ -54,8 +54,11 @@ export const Option = styled.li`
   justify-content: space-between;
 `;
 
-export const Input = styled.input`
+export const Input = styled.input<{ $isValid: boolean }>`
   width: 30px;
+
+  border: ${({ $isValid }) => ($isValid ? "1px solid black" : "1px solid red")};
+  outline: ${({ $isValid }) => ($isValid ? "" : "1px solid red")};
 `;
 
 export const ButtonContainer = styled.div`
@@ -76,6 +79,10 @@ export const PrimaryButton = styled.button`
   font-weight: bold;
 
   cursor: pointer;
+
+  :disabled {
+    color: gray;
+  }
 `;
 
 export const SecondaryButton = styled.button`
@@ -88,4 +95,12 @@ export const SecondaryButton = styled.button`
   border-radius: 2px;
 
   cursor: pointer;
+`;
+
+export const ErrorMessage = styled.div`
+  position: absolute;
+  top: 70%;
+
+  color: red;
+  font-size: 14px;
 `;
