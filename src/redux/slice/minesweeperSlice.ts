@@ -109,6 +109,7 @@ export const { changeDifficulty, resetGame, startGame, clickCell, tickTimer } =
 export const selectBoard = (state: RootState) => state.mineSweeper.board;
 export const selectBoardRow = (state: RootState) => state.mineSweeper.row;
 export const selectBoardColumn = (state: RootState) => state.mineSweeper.column;
+export const selectMines = (state: RootState) => state.mineSweeper.mines;
 export const selectCellStatus = (state: RootState) => state.mineSweeper.cellStatus;
 export const selectGameStatus = (state: RootState) => state.mineSweeper.status;
 export const selectTimer = (state: RootState) =>

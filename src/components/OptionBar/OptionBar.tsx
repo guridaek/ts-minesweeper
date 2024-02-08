@@ -3,10 +3,12 @@ import { DIFFICULTIES, DIFFICULTY_SETTINGS, Difficulty } from "../../lib/constan
 import * as S from "./OptionBar.styled";
 import { useAppDispatch } from "../../redux/hooks";
 import { changeDifficulty } from "../../redux/slice/minesweeperSlice";
+import CustomGameModal from "../CustomGameModal/CustomGameModal";
 
 function OptionBar() {
   const [difficulty, setDifficulty] = useState<Difficulty>("Intermediate");
   const [menuIsShown, setMenuIsShown] = useState(false);
+  const [modalIsShown, setModalIsShown] = useState(false);
   const menuRef = useRef<HTMLUListElement>(null);
 
   const dispatch = useAppDispatch();
@@ -14,20 +16,42 @@ function OptionBar() {
   const handleChangeDifficulty = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedDifficulty = e.target.value as Difficulty;
 
-    setDifficulty(selectedDifficulty);
     setMenuIsShown(false);
 
-    dispatch(
-      changeDifficulty(
-        selectedDifficulty !== "Custom"
-          ? DIFFICULTY_SETTINGS[selectedDifficulty]
-          : { row: 10, column: 10, mines: 10 }
-      )
-    );
+    if (selectedDifficulty === "Custom") {
+      openModal();
+
+      return;
+    }
+
+    setDifficulty(selectedDifficulty);
+    dispatch(changeDifficulty(DIFFICULTY_SETTINGS[selectedDifficulty]));
   };
 
   const handleMenuClick = () => {
     setMenuIsShown(!menuIsShown);
+  };
+
+  const openModal = () => {
+    setModalIsShown(true);
+  };
+
+  const closeModal = () => {
+    setModalIsShown(false);
+  };
+
+  const applyCustomDifficulty = ({
+    row,
+    column,
+    mines,
+  }: {
+    row: number;
+    column: number;
+    mines: number;
+  }) => {
+    closeModal();
+    setDifficulty("Custom");
+    dispatch(changeDifficulty({ row, column, mines }));
   };
 
   useEffect(() => {
@@ -69,6 +93,9 @@ function OptionBar() {
           ))}
         </S.Menu>
       </S.MenuContainer>
+      {modalIsShown && (
+        <CustomGameModal applyDifficulty={applyCustomDifficulty} closeModal={closeModal} />
+      )}
     </S.Container>
   );
 }
