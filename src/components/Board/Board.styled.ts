@@ -9,4 +9,7 @@ export const Container = styled.ul<{ $row: number; $column: number }>`
 
   width: fit-content;
   height: fit-content;
+
+  margin-left: auto;
+  margin-right: auto;
 `;
