@@ -6,6 +6,7 @@ import {
   selectBoardColumn,
   selectCellStatus,
   startGame,
+  selectGameStatus,
 } from "../../redux/slice/minesweeperSlice";
 import Cell from "../Cell/Cell";
 import * as S from "./Board.styled";
@@ -15,14 +16,20 @@ function Board() {
   const row = useAppSelector(selectBoardRow);
   const column = useAppSelector(selectBoardColumn);
   const cellStatus = useAppSelector(selectCellStatus);
+  const gameStatus = useAppSelector(selectGameStatus);
 
   const dispatch = useAppDispatch();
 
   const handleClickCell =
     ([x, y]: [number, number]) =>
     () => {
-      dispatch(startGame([x, y]));
-      dispatch(clickCell([x, y]));
+      if (gameStatus === "IDLE") {
+        dispatch(startGame([x, y]));
+      }
+
+      if (gameStatus === "IDLE" || gameStatus === "IN_PROGRESS") {
+        dispatch(clickCell([x, y]));
+      }
     };
 
   return (
