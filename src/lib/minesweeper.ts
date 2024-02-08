@@ -1,4 +1,10 @@
-import { CellState, MINE_VALUE } from "./constants";
+import {
+  CellState,
+  DIFFICULTY_LOCAL_STORAGE_KEY,
+  DIFFICULTY_SETTINGS,
+  Difficulty,
+  MINE_VALUE,
+} from "./constants";
 
 // 8방향 탐색
 const dx = [-1, -1, -1, 0, 1, 1, 1, 0];
@@ -113,4 +119,35 @@ export const openCell = ({
   }
 
   return { updatedCellStatus: updatedCellStatus, openCount: openCount };
+};
+
+interface DifficultySettings {
+  difficulty: Difficulty;
+  row: number;
+  column: number;
+  mines: number;
+}
+
+export const saveDifficultySettings = (settings: DifficultySettings) => {
+  localStorage.setItem(DIFFICULTY_LOCAL_STORAGE_KEY, JSON.stringify(settings));
+};
+
+export const loadDifficultySettings = () => {
+  const defaultSettings: DifficultySettings = {
+    difficulty: "Intermediate",
+    ...DIFFICULTY_SETTINGS.Intermediate,
+  };
+
+  const item = localStorage.getItem(DIFFICULTY_LOCAL_STORAGE_KEY);
+  try {
+    if (item) {
+      const loadedSettings: DifficultySettings = JSON.parse(item);
+
+      return loadedSettings;
+    }
+  } catch (e) {
+    return defaultSettings;
+  }
+
+  return defaultSettings;
 };

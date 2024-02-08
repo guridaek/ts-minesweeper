@@ -4,6 +4,7 @@ import * as S from "./OptionBar.styled";
 import { useAppDispatch } from "../../redux/hooks";
 import { changeDifficulty } from "../../redux/slice/minesweeperSlice";
 import CustomGameModal from "../CustomGameModal/CustomGameModal";
+import { loadDifficultySettings, saveDifficultySettings } from "../../lib/minesweeper";
 
 function OptionBar() {
   const [difficulty, setDifficulty] = useState<Difficulty>("Intermediate");
@@ -26,6 +27,10 @@ function OptionBar() {
 
     setDifficulty(selectedDifficulty);
     dispatch(changeDifficulty(DIFFICULTY_SETTINGS[selectedDifficulty]));
+    saveDifficultySettings({
+      difficulty: selectedDifficulty,
+      ...DIFFICULTY_SETTINGS[selectedDifficulty],
+    });
   };
 
   const handleMenuClick = () => {
@@ -52,7 +57,20 @@ function OptionBar() {
     closeModal();
     setDifficulty("Custom");
     dispatch(changeDifficulty({ row, column, mines }));
+    saveDifficultySettings({
+      difficulty: "Custom",
+      row,
+      column,
+      mines,
+    });
   };
+
+  useEffect(() => {
+    const settings = loadDifficultySettings();
+
+    setDifficulty(settings.difficulty);
+    dispatch(changeDifficulty({ ...settings }));
+  }, [dispatch]);
 
   useEffect(() => {
     const handleOutsideMenuClick = (e: MouseEvent) => {
