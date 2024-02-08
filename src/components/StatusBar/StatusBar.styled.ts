@@ -29,3 +29,29 @@ export const ResetButton = styled.button`
     cursor: pointer;
   }
 `;
+
+export const Counter = styled.ul`
+  display: flex;
+
+  width: 60px;
+  height: 30px;
+
+  box-sizing: border-box;
+  padding: 0 2px 0 2px;
+
+  background-color: #2c3338;
+`;
+
+export const Digit = styled.li`
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  padding-top: 2px;
+
+  color: crimson;
+  font-size: 28px;
+  font-weight: bold;
+`;

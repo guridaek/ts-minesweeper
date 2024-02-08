@@ -7,7 +7,7 @@ export interface MineSweeperState {
   status: "IDLE" | "IN_PROGRESS" | "WIN" | "DEFEAT";
   board: number[][];
   cellStatus: CellState[][];
-  time: number;
+  timer: number;
   row: number;
   column: number;
   mines: number;
@@ -19,7 +19,7 @@ const initialState: MineSweeperState = {
   status: "IDLE",
   board: Array.from(Array(16), () => new Array(16).fill(0)),
   cellStatus: Array.from(Array(16), () => new Array(16).fill(CellState.CLOSED)),
-  time: 0,
+  timer: 0,
   row: 16,
   column: 16,
   mines: 40,
@@ -43,7 +43,7 @@ export const mineSweeperSlice = createSlice({
       state.status = "IDLE";
       state.board = Array.from(Array(row), () => new Array(column).fill(0));
       state.cellStatus = Array.from(Array(row), () => new Array(column).fill(CellState.CLOSED));
-      state.time = 0;
+      state.timer = 0;
       state.row = row;
       state.column = column;
       state.mines = mines;
@@ -63,7 +63,7 @@ export const mineSweeperSlice = createSlice({
       });
 
       state.status = "IN_PROGRESS";
-      state.time = 0;
+      state.timer = 0;
     },
     clickCell: (state, action: PayloadAction<[number, number]>) => {
       const [x, y] = action.payload;
@@ -89,15 +89,20 @@ export const mineSweeperSlice = createSlice({
         state.status = "WIN";
       }
     },
+    tickTimer: (state) => {
+      state.timer += 1;
+    },
   },
 });
 
-export const { resetGame, startGame, clickCell } = mineSweeperSlice.actions;
+export const { resetGame, startGame, clickCell, tickTimer } = mineSweeperSlice.actions;
 
 export const selectBoard = (state: RootState) => state.mineSweeper.board;
 export const selectBoardRow = (state: RootState) => state.mineSweeper.row;
 export const selectBoardColumn = (state: RootState) => state.mineSweeper.column;
 export const selectCellStatus = (state: RootState) => state.mineSweeper.cellStatus;
 export const selectGameStatus = (state: RootState) => state.mineSweeper.status;
+export const selectTimer = (state: RootState) =>
+  state.mineSweeper.timer.toString().padStart(3, "0");
 
 export default mineSweeperSlice.reducer;
