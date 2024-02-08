@@ -1,5 +1,5 @@
 import * as S from "./CustomGameModal.styled";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { selectBoardColumn, selectBoardRow, selectMines } from "../../redux/slice/minesweeperSlice";
 
@@ -29,6 +29,12 @@ function CustomGameModal({ applyDifficulty, closeModal }: Props) {
     applyDifficulty({ row, column, mines });
   };
 
+  const handleEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleApplyButtonClick();
+    }
+  };
+
   return (
     <S.Container>
       <S.BackDrop onClick={closeModal} />
@@ -37,15 +43,15 @@ function CustomGameModal({ applyDifficulty, closeModal }: Props) {
         <S.OptionList>
           <S.Option>
             세로:
-            <S.Input value={row} onChange={handleRowChange} />
+            <S.Input value={row} onChange={handleRowChange} onKeyDown={handleEnter} />
           </S.Option>
           <S.Option>
             가로:
-            <S.Input value={column} onChange={handleColumnChange} />
+            <S.Input value={column} onChange={handleColumnChange} onKeyDown={handleEnter} />
           </S.Option>
           <S.Option>
             지뢰의 수:
-            <S.Input value={mines} onChange={handleMinesChange} />
+            <S.Input value={mines} onChange={handleMinesChange} onKeyDown={handleEnter} />
           </S.Option>
         </S.OptionList>
         <S.ButtonContainer>

@@ -85,6 +85,7 @@ function OptionBar() {
                   value={value}
                   checked={value === difficulty}
                   onChange={handleChangeDifficulty}
+                  onClick={value === "Custom" ? openModal : undefined}
                 />
                 <S.CheckedMark $isChecked={value === difficulty}>✔️</S.CheckedMark>
                 {value}
