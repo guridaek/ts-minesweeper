@@ -2,6 +2,8 @@ import { MouseEvent } from "react";
 import { CellState, MINE_VALUE } from "../../lib/constants";
 import * as S from "./Cell.styled";
 import { getCellIcon } from "../../lib/minesweeper";
+import { useAppSelector } from "../../redux/hooks";
+import { selectGameStatus } from "../../redux/slice/minesweeperSlice";
 
 interface Props {
   value: number;
@@ -12,7 +14,8 @@ interface Props {
 }
 
 function Cell({ value, status, handleMouseDown, handleMouseUp, handleContextMenu }: Props) {
-  const icon = getCellIcon(status, value);
+  const gameStatus = useAppSelector(selectGameStatus);
+  const icon = getCellIcon({ cellState: status, value: value, gameState: gameStatus });
 
   return (
     <S.Container>

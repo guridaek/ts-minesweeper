@@ -3,6 +3,7 @@ import {
   DIFFICULTY_LOCAL_STORAGE_KEY,
   DIFFICULTY_SETTINGS,
   Difficulty,
+  GameState,
   MINE_VALUE,
 } from "./constants";
 
@@ -73,17 +74,10 @@ export const openCell = ({
   const updatedCellStatus = cellStatus.map((row) => [...row]);
 
   if (board[x][y] === MINE_VALUE) {
+    updatedCellStatus[x][y] = CellState.BURSTED;
+
     return {
-      updatedCellStatus: updatedCellStatus.map((row, curX) =>
-        row.map((status, curY) => {
-          if (curX === x && curY === y) {
-            return CellState.BURSTED;
-          }
-
-          return board[curX][curY] === MINE_VALUE ? CellState.OPENED : status;
-        })
-      ),
-
+      updatedCellStatus,
       openCount: 0,
     };
   }
@@ -152,13 +146,23 @@ export const loadDifficultySettings = () => {
   return defaultSettings;
 };
 
-export const getCellIcon = (state: CellState, value: number) => {
-  switch (state) {
+export const getCellIcon = ({
+  cellState,
+  value,
+  gameState,
+}: {
+  cellState: CellState;
+  value: number;
+  gameState: GameState;
+}) => {
+  switch (cellState) {
     case CellState.CLOSED:
-      return "";
+      return (gameState === GameState.WIN || gameState === GameState.DEFEAT) && value === MINE_VALUE
+        ? "💣"
+        : "";
 
     case CellState.FLAGGED:
-      return "🚩";
+      return gameState === GameState.IN_PROGRESS ? "🚩" : value === MINE_VALUE ? "🚩" : "🚫";
 
     case CellState.OPENED:
     case CellState.BURSTED:
