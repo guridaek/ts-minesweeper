@@ -1,11 +1,12 @@
 import styled from "styled-components";
+import { CELL_NUMBER_COLORS } from "../../lib/constants";
 
 export const Container = styled.li`
   width: 18px;
   height: 18px;
 `;
 
-export const Button = styled.button<{ $isOpen: boolean; $isBursted: boolean }>`
+export const Button = styled.button<{ $isOpen: boolean; $isBursted: boolean; $number?: number }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,6 +21,7 @@ export const Button = styled.button<{ $isOpen: boolean; $isBursted: boolean }>`
   background-color: ${({ $isBursted }) => $isBursted && "red"};
 
   font-weight: bold;
+  color: ${({ $number }) => $number && CELL_NUMBER_COLORS[$number]};
 
   &:hover {
     border-color: ${({ $isOpen }) => !$isOpen && "ivory"};

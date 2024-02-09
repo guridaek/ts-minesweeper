@@ -1,5 +1,5 @@
 import { MouseEvent } from "react";
-import { CellState } from "../../lib/constants";
+import { CellState, MINE_VALUE } from "../../lib/constants";
 import * as S from "./Cell.styled";
 import { getCellIcon } from "../../lib/minesweeper";
 
@@ -19,6 +19,7 @@ function Cell({ value, status, handleMouseDown, handleMouseUp, handleContextMenu
       <S.Button
         $isOpen={status === CellState.OPENED || status === CellState.BURSTED}
         $isBursted={status === CellState.BURSTED}
+        $number={value !== MINE_VALUE ? value : undefined}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onContextMenu={handleContextMenu}

@@ -20,3 +20,15 @@ export const MIN_SIZE = 8;
 export const MAX_SIZE = 100;
 
 export const DIFFICULTY_LOCAL_STORAGE_KEY = "difficulty";
+
+export const CELL_NUMBER_COLORS = [
+  "",
+  "blue",
+  "green",
+  "red",
+  "darkblue",
+  "brown",
+  "cyan",
+  "black",
+  "grey",
+];
