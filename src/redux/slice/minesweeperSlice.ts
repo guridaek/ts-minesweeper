@@ -122,6 +122,8 @@ export const mineSweeperSlice = createSlice({
       const dx = [-1, -1, -1, 0, 1, 1, 1, 0];
       const dy = [-1, 0, 1, 1, 1, 0, -1, -1];
 
+      if (state.status !== "IN_PROGRESS") return;
+
       for (let dir = 0; dir < 8; dir++) {
         const curX = x + dx[dir];
         const curY = y + dy[dir];
