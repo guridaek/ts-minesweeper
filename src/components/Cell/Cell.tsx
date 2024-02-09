@@ -6,11 +6,12 @@ import { getCellIcon } from "../../lib/minesweeper";
 interface Props {
   value: number;
   status: CellState;
-  handleLeftClick: (e: MouseEvent<HTMLButtonElement>) => void;
-  handleRightClick: (e: MouseEvent<HTMLButtonElement>) => void;
+  handleMouseDown: (e: MouseEvent<HTMLButtonElement>) => void;
+  handleMouseUp: (e: MouseEvent<HTMLButtonElement>) => void;
+  handleContextMenu: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
-function Cell({ value, status, handleLeftClick, handleRightClick }: Props) {
+function Cell({ value, status, handleMouseDown, handleMouseUp, handleContextMenu }: Props) {
   const icon = getCellIcon(status, value);
 
   return (
@@ -18,8 +19,9 @@ function Cell({ value, status, handleLeftClick, handleRightClick }: Props) {
       <S.Button
         $isOpen={status === CellState.OPENED || status === CellState.BURSTED}
         $isBursted={status === CellState.BURSTED}
-        onClick={handleLeftClick}
-        onContextMenu={handleRightClick}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onContextMenu={handleContextMenu}
       >
         {icon}
       </S.Button>

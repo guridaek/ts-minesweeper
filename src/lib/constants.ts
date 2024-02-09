@@ -4,7 +4,6 @@ export enum CellState {
   CLOSED,
   OPENED,
   FLAGGED,
-  FLAGGED_MINE,
   BURSTED,
 }
 
