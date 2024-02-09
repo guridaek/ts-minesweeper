@@ -1,7 +1,8 @@
 import useInterval from "../../hooks/useInterval";
+import { GameState } from "../../lib/constants";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
-  selectGameStatus,
+  selectGameState,
   resetGame,
   selectTimer,
   tickTimer,
@@ -10,7 +11,7 @@ import {
 import * as S from "./StatusBar.styled";
 
 function StatusBar() {
-  const status = useAppSelector(selectGameStatus);
+  const gameState = useAppSelector(selectGameState);
   const timer = useAppSelector(selectTimer);
   const minesLeft = useAppSelector(selectMinesLeft);
 
@@ -20,7 +21,7 @@ function StatusBar() {
     () => {
       dispatch(tickTimer());
     },
-    status === "IN_PROGRESS" ? 1000 : null
+    gameState === GameState.IN_PROGRESS ? 1000 : null
   );
 
   const handleResetButtonClick = () => {
@@ -35,7 +36,7 @@ function StatusBar() {
         ))}
       </S.Counter>
       <S.ResetButton onClick={handleResetButtonClick}>
-        {status === "WIN" ? "😎" : status === "DEFEAT" ? "😵" : "🙂"}
+        {gameState === GameState.WIN ? "😎" : gameState === GameState.DEFEAT ? "😵" : "🙂"}
       </S.ResetButton>
       <S.Counter>
         {timer.split("").map((value, idx) => (

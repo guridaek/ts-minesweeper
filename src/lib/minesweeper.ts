@@ -64,25 +64,25 @@ export const openCell = ({
   x,
   y,
   board,
-  cellStatus,
+  cellState,
 }: {
   x: number;
   y: number;
   board: number[][];
-  cellStatus: CellState[][];
+  cellState: CellState[][];
 }) => {
-  const updatedCellStatus = cellStatus.map((row) => [...row]);
+  const updatedCellState = cellState.map((row) => [...row]);
 
   if (board[x][y] === MINE_VALUE) {
-    updatedCellStatus[x][y] = CellState.BURSTED;
+    updatedCellState[x][y] = CellState.BURSTED;
 
     return {
-      updatedCellStatus,
+      updatedCellState,
       openCount: 0,
     };
   }
 
-  updatedCellStatus[x][y] = CellState.OPENED;
+  updatedCellState[x][y] = CellState.OPENED;
   let openCount = 1;
 
   const queue: [number, number][] = [];
@@ -101,10 +101,10 @@ export const openCell = ({
       const nextY = curY + dy[dir];
 
       if (nextX < 0 || nextX >= board.length || nextY < 0 || nextY >= board[0].length) continue;
-      if (updatedCellStatus[nextX][nextY] !== CellState.CLOSED) continue;
+      if (updatedCellState[nextX][nextY] !== CellState.CLOSED) continue;
 
       openCount += 1;
-      updatedCellStatus[nextX][nextY] = CellState.OPENED;
+      updatedCellState[nextX][nextY] = CellState.OPENED;
 
       if (board[nextX][nextY] !== 0) continue;
 
@@ -112,7 +112,7 @@ export const openCell = ({
     }
   }
 
-  return { updatedCellStatus: updatedCellStatus, openCount: openCount };
+  return { updatedCellState: updatedCellState, openCount: openCount };
 };
 
 interface DifficultySettings {

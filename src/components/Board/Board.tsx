@@ -5,9 +5,9 @@ import {
   selectBoard,
   selectBoardRow,
   selectBoardColumn,
-  selectCellStatus,
+  selectCellState,
   startGame,
-  selectGameStatus,
+  selectGameState,
   toggleFlag,
   areaOpen,
 } from "../../redux/slice/minesweeperSlice";
@@ -19,8 +19,8 @@ function Board() {
   const board = useAppSelector(selectBoard);
   const row = useAppSelector(selectBoardRow);
   const column = useAppSelector(selectBoardColumn);
-  const cellStatus = useAppSelector(selectCellStatus);
-  const gameStatus = useAppSelector(selectGameStatus);
+  const cellState = useAppSelector(selectCellState);
+  const gameState = useAppSelector(selectGameState);
 
   const dispatch = useAppDispatch();
 
@@ -42,7 +42,7 @@ function Board() {
         leftButtonDown = false;
         rightButtonDown = false;
 
-        if (cellStatus[x][y] === CellState.FLAGGED || cellStatus[x][y] === CellState.OPENED) {
+        if (cellState[x][y] === CellState.FLAGGED || cellState[x][y] === CellState.OPENED) {
           dispatch(areaOpen([x, y]));
         }
       }
@@ -54,11 +54,11 @@ function Board() {
       if (e.button === 0 && leftButtonDown) {
         leftButtonDown = false;
 
-        if (gameStatus === GameState.IDLE) {
+        if (gameState === GameState.IDLE) {
           dispatch(startGame([x, y]));
         }
 
-        if (gameStatus === GameState.IDLE || gameStatus === GameState.IN_PROGRESS) {
+        if (gameState === GameState.IDLE || gameState === GameState.IN_PROGRESS) {
           dispatch(clickCell([x, y]));
         }
       }
@@ -72,7 +72,7 @@ function Board() {
       if (rightButtonDown) {
         rightButtonDown = false;
 
-        if (gameStatus === GameState.IDLE || gameStatus === GameState.IN_PROGRESS) {
+        if (gameState === GameState.IDLE || gameState === GameState.IN_PROGRESS) {
           dispatch(toggleFlag([x, y]));
         }
       }
@@ -85,7 +85,7 @@ function Board() {
           <Cell
             key={y}
             value={board[x][y]}
-            status={cellStatus[x][y]}
+            state={cellState[x][y]}
             handleMouseDown={handleMouseDown([x, y])}
             handleMouseUp={handleMouseUp([x, y])}
             handleContextMenu={handleContextMenu([x, y])}

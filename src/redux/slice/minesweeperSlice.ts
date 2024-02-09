@@ -4,9 +4,9 @@ import { createBoard, openCell } from "../../lib/minesweeper";
 import { CellState, GameState } from "../../lib/constants";
 
 export interface MineSweeperState {
-  status: GameState;
+  state: GameState;
   board: number[][];
-  cellStatus: CellState[][];
+  cellState: CellState[][];
   timer: number;
   row: number;
   column: number;
@@ -16,9 +16,9 @@ export interface MineSweeperState {
 }
 
 const initialState: MineSweeperState = {
-  status: GameState.IDLE,
+  state: GameState.IDLE,
   board: Array.from(Array(16), () => new Array(16).fill(0)),
-  cellStatus: Array.from(Array(16), () => new Array(16).fill(CellState.CLOSED)),
+  cellState: Array.from(Array(16), () => new Array(16).fill(CellState.CLOSED)),
   timer: 0,
   row: 16,
   column: 16,
@@ -40,9 +40,9 @@ export const mineSweeperSlice = createSlice({
     changeDifficulty: (state, action: PayloadAction<DifficultyPayload>) => {
       const { row, column, mines } = action.payload;
 
-      state.status = GameState.IDLE;
+      state.state = GameState.IDLE;
       state.board = Array.from(Array(row), () => new Array(column).fill(0));
-      state.cellStatus = Array.from(Array(row), () => new Array(column).fill(CellState.CLOSED));
+      state.cellState = Array.from(Array(row), () => new Array(column).fill(CellState.CLOSED));
       state.timer = 0;
       state.row = row;
       state.column = column;
@@ -51,15 +51,15 @@ export const mineSweeperSlice = createSlice({
       state.openedCells = 0;
     },
     resetGame: (state) => {
-      state.status = GameState.IDLE;
+      state.state = GameState.IDLE;
       state.board = state.board.map((row) => row.map(() => 0));
-      state.cellStatus = state.cellStatus.map((row) => row.map(() => CellState.CLOSED));
+      state.cellState = state.cellState.map((row) => row.map(() => CellState.CLOSED));
       state.timer = 0;
       state.flags = 0;
       state.openedCells = 0;
     },
     startGame: (state, action: PayloadAction<[number, number]>) => {
-      if (state.status !== GameState.IDLE) return;
+      if (state.state !== GameState.IDLE) return;
 
       const [startX, startY] = action.payload;
 
@@ -70,31 +70,31 @@ export const mineSweeperSlice = createSlice({
         startCoords: [startX, startY],
       });
 
-      state.status = GameState.IN_PROGRESS;
+      state.state = GameState.IN_PROGRESS;
       state.timer = 0;
     },
     clickCell: (state, action: PayloadAction<[number, number]>) => {
       const [x, y] = action.payload;
 
-      if (state.status === GameState.DEFEAT || state.status === GameState.WIN) return;
-      if (state.cellStatus[x][y] !== CellState.CLOSED) return;
+      if (state.state === GameState.DEFEAT || state.state === GameState.WIN) return;
+      if (state.cellState[x][y] !== CellState.CLOSED) return;
 
-      const { updatedCellStatus, openCount } = openCell({
+      const { updatedCellState, openCount } = openCell({
         x: x,
         y: y,
         board: state.board,
-        cellStatus: state.cellStatus,
+        cellState: state.cellState,
       });
 
-      state.cellStatus = updatedCellStatus;
+      state.cellState = updatedCellState;
       state.openedCells += openCount;
 
       if (openCount < 1) {
-        state.status = GameState.DEFEAT;
+        state.state = GameState.DEFEAT;
       }
 
       if (state.openedCells === state.row * state.column - state.mines) {
-        state.status = GameState.WIN;
+        state.state = GameState.WIN;
       }
     },
     tickTimer: (state) => {
@@ -103,17 +103,17 @@ export const mineSweeperSlice = createSlice({
     toggleFlag: (state, action: PayloadAction<[number, number]>) => {
       const [x, y] = action.payload;
 
-      if (state.status === GameState.DEFEAT || state.status === GameState.WIN) return;
-      if (state.cellStatus[x][y] === CellState.OPENED) return;
+      if (state.state === GameState.DEFEAT || state.state === GameState.WIN) return;
+      if (state.cellState[x][y] === CellState.OPENED) return;
 
-      if (state.cellStatus[x][y] === CellState.FLAGGED) {
-        state.cellStatus[x][y] = CellState.CLOSED;
+      if (state.cellState[x][y] === CellState.FLAGGED) {
+        state.cellState[x][y] = CellState.CLOSED;
         state.flags -= 1;
 
         return;
       }
 
-      state.cellStatus[x][y] = CellState.FLAGGED;
+      state.cellState[x][y] = CellState.FLAGGED;
       state.flags += 1;
     },
     areaOpen: (state, action: PayloadAction<[number, number]>) => {
@@ -122,33 +122,33 @@ export const mineSweeperSlice = createSlice({
       const dx = [-1, -1, -1, 0, 1, 1, 1, 0];
       const dy = [-1, 0, 1, 1, 1, 0, -1, -1];
 
-      if (state.status !== GameState.IN_PROGRESS) return;
+      if (state.state !== GameState.IN_PROGRESS) return;
 
       for (let dir = 0; dir < 8; dir++) {
         const curX = x + dx[dir];
         const curY = y + dy[dir];
 
         if (curX < 0 || curX >= state.row || curY < 0 || curY >= state.column) continue;
-        if (state.cellStatus[curX][curY] !== CellState.CLOSED) continue;
+        if (state.cellState[curX][curY] !== CellState.CLOSED) continue;
 
-        const { updatedCellStatus, openCount } = openCell({
+        const { updatedCellState, openCount } = openCell({
           x: curX,
           y: curY,
           board: state.board,
-          cellStatus: state.cellStatus,
+          cellState: state.cellState,
         });
 
-        state.cellStatus = updatedCellStatus;
+        state.cellState = updatedCellState;
         state.openedCells += openCount;
 
         if (openCount < 1) {
-          state.status = GameState.DEFEAT;
+          state.state = GameState.DEFEAT;
 
           return;
         }
 
         if (state.openedCells === state.row * state.column - state.mines) {
-          state.status = GameState.WIN;
+          state.state = GameState.WIN;
         }
       }
     },
@@ -169,8 +169,8 @@ export const selectBoard = (state: RootState) => state.mineSweeper.board;
 export const selectBoardRow = (state: RootState) => state.mineSweeper.row;
 export const selectBoardColumn = (state: RootState) => state.mineSweeper.column;
 export const selectMines = (state: RootState) => state.mineSweeper.mines;
-export const selectCellStatus = (state: RootState) => state.mineSweeper.cellStatus;
-export const selectGameStatus = (state: RootState) => state.mineSweeper.status;
+export const selectCellState = (state: RootState) => state.mineSweeper.cellState;
+export const selectGameState = (state: RootState) => state.mineSweeper.state;
 
 export const selectMinesLeft = (state: RootState) => {
   const minesLeft = state.mineSweeper.mines - state.mineSweeper.flags;
