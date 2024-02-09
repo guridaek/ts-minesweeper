@@ -1,5 +1,12 @@
 export const MINE_VALUE = -1;
 
+export enum GameState {
+  "IDLE",
+  "IN_PROGRESS",
+  "WIN",
+  "DEFEAT",
+}
+
 export enum CellState {
   CLOSED,
   OPENED,

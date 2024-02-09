@@ -13,7 +13,7 @@ import {
 } from "../../redux/slice/minesweeperSlice";
 import Cell from "../Cell/Cell";
 import * as S from "./Board.styled";
-import { CellState } from "../../lib/constants";
+import { CellState, GameState } from "../../lib/constants";
 
 function Board() {
   const board = useAppSelector(selectBoard);
@@ -54,11 +54,11 @@ function Board() {
       if (e.button === 0 && leftButtonDown) {
         leftButtonDown = false;
 
-        if (gameStatus === "IDLE") {
+        if (gameStatus === GameState.IDLE) {
           dispatch(startGame([x, y]));
         }
 
-        if (gameStatus === "IDLE" || gameStatus === "IN_PROGRESS") {
+        if (gameStatus === GameState.IDLE || gameStatus === GameState.IN_PROGRESS) {
           dispatch(clickCell([x, y]));
         }
       }
@@ -72,7 +72,7 @@ function Board() {
       if (rightButtonDown) {
         rightButtonDown = false;
 
-        if (gameStatus === "IDLE" || gameStatus === "IN_PROGRESS") {
+        if (gameStatus === GameState.IDLE || gameStatus === GameState.IN_PROGRESS) {
           dispatch(toggleFlag([x, y]));
         }
       }

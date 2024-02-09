@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { createBoard, openCell } from "../../lib/minesweeper";
-import { CellState } from "../../lib/constants";
+import { CellState, GameState } from "../../lib/constants";
 
 export interface MineSweeperState {
-  status: "IDLE" | "IN_PROGRESS" | "WIN" | "DEFEAT";
+  status: GameState;
   board: number[][];
   cellStatus: CellState[][];
   timer: number;
@@ -16,7 +16,7 @@ export interface MineSweeperState {
 }
 
 const initialState: MineSweeperState = {
-  status: "IDLE",
+  status: GameState.IDLE,
   board: Array.from(Array(16), () => new Array(16).fill(0)),
   cellStatus: Array.from(Array(16), () => new Array(16).fill(CellState.CLOSED)),
   timer: 0,
@@ -40,7 +40,7 @@ export const mineSweeperSlice = createSlice({
     changeDifficulty: (state, action: PayloadAction<DifficultyPayload>) => {
       const { row, column, mines } = action.payload;
 
-      state.status = "IDLE";
+      state.status = GameState.IDLE;
       state.board = Array.from(Array(row), () => new Array(column).fill(0));
       state.cellStatus = Array.from(Array(row), () => new Array(column).fill(CellState.CLOSED));
       state.timer = 0;
@@ -51,7 +51,7 @@ export const mineSweeperSlice = createSlice({
       state.openedCells = 0;
     },
     resetGame: (state) => {
-      state.status = "IDLE";
+      state.status = GameState.IDLE;
       state.board = state.board.map((row) => row.map(() => 0));
       state.cellStatus = state.cellStatus.map((row) => row.map(() => CellState.CLOSED));
       state.timer = 0;
@@ -59,7 +59,7 @@ export const mineSweeperSlice = createSlice({
       state.openedCells = 0;
     },
     startGame: (state, action: PayloadAction<[number, number]>) => {
-      if (state.status !== "IDLE") return;
+      if (state.status !== GameState.IDLE) return;
 
       const [startX, startY] = action.payload;
 
@@ -70,13 +70,13 @@ export const mineSweeperSlice = createSlice({
         startCoords: [startX, startY],
       });
 
-      state.status = "IN_PROGRESS";
+      state.status = GameState.IN_PROGRESS;
       state.timer = 0;
     },
     clickCell: (state, action: PayloadAction<[number, number]>) => {
       const [x, y] = action.payload;
 
-      if (state.status === "DEFEAT" || state.status === "WIN") return;
+      if (state.status === GameState.DEFEAT || state.status === GameState.WIN) return;
       if (state.cellStatus[x][y] !== CellState.CLOSED) return;
 
       const { updatedCellStatus, openCount } = openCell({
@@ -90,11 +90,11 @@ export const mineSweeperSlice = createSlice({
       state.openedCells += openCount;
 
       if (openCount < 1) {
-        state.status = "DEFEAT";
+        state.status = GameState.DEFEAT;
       }
 
       if (state.openedCells === state.row * state.column - state.mines) {
-        state.status = "WIN";
+        state.status = GameState.WIN;
       }
     },
     tickTimer: (state) => {
@@ -103,7 +103,7 @@ export const mineSweeperSlice = createSlice({
     toggleFlag: (state, action: PayloadAction<[number, number]>) => {
       const [x, y] = action.payload;
 
-      if (state.status === "DEFEAT" || state.status === "WIN") return;
+      if (state.status === GameState.DEFEAT || state.status === GameState.WIN) return;
       if (state.cellStatus[x][y] === CellState.OPENED) return;
 
       if (state.cellStatus[x][y] === CellState.FLAGGED) {
@@ -122,7 +122,7 @@ export const mineSweeperSlice = createSlice({
       const dx = [-1, -1, -1, 0, 1, 1, 1, 0];
       const dy = [-1, 0, 1, 1, 1, 0, -1, -1];
 
-      if (state.status !== "IN_PROGRESS") return;
+      if (state.status !== GameState.IN_PROGRESS) return;
 
       for (let dir = 0; dir < 8; dir++) {
         const curX = x + dx[dir];
@@ -142,13 +142,13 @@ export const mineSweeperSlice = createSlice({
         state.openedCells += openCount;
 
         if (openCount < 1) {
-          state.status = "DEFEAT";
+          state.status = GameState.DEFEAT;
 
           return;
         }
 
         if (state.openedCells === state.row * state.column - state.mines) {
-          state.status = "WIN";
+          state.status = GameState.WIN;
         }
       }
     },
