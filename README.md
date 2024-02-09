@@ -1,30 +1,40 @@
-# React + TypeScript + Vite
+# ts-google-forms
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+typescript + React + Redux로 구현한 지뢰 찾기입니다.
 
-Currently, two official plugins are available:
+<img src="./screenshot/image.jpg" width=300px >
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 기술스택
 
-## Expanding the ESLint configuration
+- Vite
+- React + TypeScript
+- Redux + Redux Toolkit
+- Styled-components
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Getting Started
 
-- Configure the top-level `parserOptions` property like this:
+`npm install`
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+`npm run dev`
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+open http://localhost:5173/
+
+## 주요 기능
+
+- 난이도 설정
+
+  <img src="./screenshot/menu.png" width=200px >
+
+  - Beginner (8 X 8) 지뢰 10개
+  - Intermediate (16 X 16) 지뢰 40개
+  - Expert (32 X 16) 지뢰 100개
+  - Custom (8~100 X 8~100) 지뢰 1 ~ Cell 개수의 1/3 설정 가능
+
+    <img src="./screenshot/validation.png" width=300px >
+
+  - 브라우저에 설정 저장
+
+- 우클릭 깃발
+- 양클릭 Area Open
+
+  <img src="./screenshot/areaOpen.gif" width=300px >
