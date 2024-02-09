@@ -151,3 +151,17 @@ export const loadDifficultySettings = () => {
 
   return defaultSettings;
 };
+
+export const getCellIcon = (state: CellState, value: number) => {
+  switch (state) {
+    case CellState.CLOSED:
+      return "";
+
+    case CellState.FLAGGED:
+      return "🚩";
+
+    case CellState.OPENED:
+    case CellState.BURSTED:
+      return value === MINE_VALUE ? "💣" : value > 0 ? value : "";
+  }
+};
