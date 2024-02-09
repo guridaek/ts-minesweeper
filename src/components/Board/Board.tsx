@@ -1,3 +1,4 @@
+import { MouseEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   clickCell,
@@ -7,6 +8,7 @@ import {
   selectCellStatus,
   startGame,
   selectGameStatus,
+  toggleFlag,
 } from "../../redux/slice/minesweeperSlice";
 import Cell from "../Cell/Cell";
 import * as S from "./Board.styled";
@@ -20,15 +22,27 @@ function Board() {
 
   const dispatch = useAppDispatch();
 
-  const handleClickCell =
+  const handleLeftClick =
     ([x, y]: [number, number]) =>
-    () => {
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+
       if (gameStatus === "IDLE") {
         dispatch(startGame([x, y]));
       }
 
       if (gameStatus === "IDLE" || gameStatus === "IN_PROGRESS") {
         dispatch(clickCell([x, y]));
+      }
+    };
+
+  const handleRightClick =
+    ([x, y]: [number, number]) =>
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+
+      if (gameStatus === "IDLE" || gameStatus === "IN_PROGRESS") {
+        dispatch(toggleFlag([x, y]));
       }
     };
 
@@ -40,7 +54,8 @@ function Board() {
             key={y}
             value={board[x][y]}
             status={cellStatus[x][y]}
-            handleClick={handleClickCell([x, y])}
+            handleLeftClick={handleLeftClick([x, y])}
+            handleRightClick={handleRightClick([x, y])}
           />
         ))
       )}

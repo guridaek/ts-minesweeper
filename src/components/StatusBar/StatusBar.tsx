@@ -5,12 +5,15 @@ import {
   resetGame,
   selectTimer,
   tickTimer,
+  selectMinesLeft,
 } from "../../redux/slice/minesweeperSlice";
 import * as S from "./StatusBar.styled";
 
 function StatusBar() {
   const status = useAppSelector(selectGameStatus);
   const timer = useAppSelector(selectTimer);
+  const minesLeft = useAppSelector(selectMinesLeft);
+
   const dispatch = useAppDispatch();
 
   useInterval(
@@ -27,7 +30,7 @@ function StatusBar() {
   return (
     <S.Container>
       <S.Counter>
-        {[0, 0, 0].map((value, idx) => (
+        {minesLeft.split("").map((value, idx) => (
           <S.Digit key={idx}>{value}</S.Digit>
         ))}
       </S.Counter>

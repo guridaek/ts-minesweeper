@@ -1,23 +1,27 @@
-import { CellState, MINE_VALUE } from "../../lib/constants";
+import { MouseEvent } from "react";
+import { CellState } from "../../lib/constants";
 import * as S from "./Cell.styled";
+import { getCellIcon } from "../../lib/minesweeper";
 
 interface Props {
   value: number;
   status: CellState;
-  handleClick: () => void;
+  handleLeftClick: (e: MouseEvent<HTMLButtonElement>) => void;
+  handleRightClick: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
-function Cell({ value, status, handleClick }: Props) {
-  const icon = value === MINE_VALUE ? "💣" : value > 0 ? value : "";
+function Cell({ value, status, handleLeftClick, handleRightClick }: Props) {
+  const icon = getCellIcon(status, value);
 
   return (
     <S.Container>
       <S.Button
-        $isOpen={status !== CellState.CLOSED}
+        $isOpen={status === CellState.OPENED || status === CellState.BURSTED}
         $isBursted={status === CellState.BURSTED}
-        onClick={handleClick}
+        onClick={handleLeftClick}
+        onContextMenu={handleRightClick}
       >
-        {status !== CellState.CLOSED && icon}
+        {icon}
       </S.Button>
     </S.Container>
   );

@@ -100,10 +100,26 @@ export const mineSweeperSlice = createSlice({
     tickTimer: (state) => {
       state.timer += 1;
     },
+    toggleFlag: (state, action: PayloadAction<[number, number]>) => {
+      const [x, y] = action.payload;
+
+      if (state.status === "DEFEAT" || state.status === "WIN") return;
+      if (state.cellStatus[x][y] === CellState.OPENED) return;
+
+      if (state.cellStatus[x][y] === CellState.FLAGGED) {
+        state.cellStatus[x][y] = CellState.CLOSED;
+        state.flags -= 1;
+
+        return;
+      }
+
+      state.cellStatus[x][y] = CellState.FLAGGED;
+      state.flags += 1;
+    },
   },
 });
 
-export const { changeDifficulty, resetGame, startGame, clickCell, tickTimer } =
+export const { changeDifficulty, resetGame, startGame, clickCell, tickTimer, toggleFlag } =
   mineSweeperSlice.actions;
 
 export const selectBoard = (state: RootState) => state.mineSweeper.board;
@@ -112,6 +128,14 @@ export const selectBoardColumn = (state: RootState) => state.mineSweeper.column;
 export const selectMines = (state: RootState) => state.mineSweeper.mines;
 export const selectCellStatus = (state: RootState) => state.mineSweeper.cellStatus;
 export const selectGameStatus = (state: RootState) => state.mineSweeper.status;
+
+export const selectMinesLeft = (state: RootState) => {
+  const minesLeft = state.mineSweeper.mines - state.mineSweeper.flags;
+
+  return 0 <= minesLeft
+    ? minesLeft.toString().padStart(3, "0")
+    : `-${Math.abs(minesLeft).toString().padStart(2, "0")}`;
+};
 export const selectTimer = (state: RootState) =>
   state.mineSweeper.timer.toString().padStart(3, "0");
 
