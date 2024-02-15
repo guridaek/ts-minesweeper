@@ -4,6 +4,10 @@ typescript + React + Redux로 구현한 지뢰 찾기입니다.
 
 <img src="./screenshot/image.jpg" width=300px >
 
+## Play Demo
+
+https://ts-minesweeper.vercel.app/
+
 ## 기술스택
 
 - Vite
