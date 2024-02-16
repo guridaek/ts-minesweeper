@@ -32,7 +32,7 @@ open http://localhost:5173/
   - Beginner (8 X 8) 지뢰 10개
   - Intermediate (16 X 16) 지뢰 40개
   - Expert (32 X 16) 지뢰 100개
-  - Custom (8~100 X 8~100) 지뢰 1 ~ Cell 개수의 1/3 설정 가능
+  - Custom (8\~100 X 8\~100) 지뢰 1 ~ Cell 개수의 1/3 설정 가능
 
     <img src="./screenshot/validation.png" width=300px >
 
